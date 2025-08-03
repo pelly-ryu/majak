@@ -49,6 +49,22 @@
             border-radius: 4px;
             margin: 10px 0;
         }
+        .tile-display {
+            font-size: 1.5em;
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+        .hand-section {
+            margin: 10px 0;
+            padding: 10px;
+            background: #ffffff;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        .hand-section h4 {
+            margin: 0 0 8px 0;
+            color: #555;
+        }
         .quality-optimal { color: #28a745; }
         .quality-good { color: #17a2b8; }
         .quality-acceptable { color: #ffc107; }
@@ -111,21 +127,58 @@
                 readDebugString(debugString);
                 document.getElementById('aiResults').style.display = 'none';
                 document.getElementById('comparisonResults').style.display = 'none';
+                displayGamePosition();
                 alert("Position loaded successfully!");
             } catch (error) {
                 alert("Error loading position: " + error.message);
             }
         }
 
+        function displayGamePosition() {
+            // Display current game state with visual tiles
+            const positionHtml = `
+                <div class="hand-section">
+                    <h4>Your Hand:</h4>
+                    <div class="tile-display">${getHandDisplay(ownHand)}</div>
+                </div>
+                <div class="hand-section">
+                    <h4>Dora:</h4>
+                    <div class="tile-display">${getHandDisplay(dora)}</div>
+                </div>
+            `;
+            
+            // Add position display area if it doesn't exist
+            let positionDiv = document.getElementById('positionDisplay');
+            if (!positionDiv) {
+                positionDiv = document.createElement('div');
+                positionDiv.id = 'positionDisplay';
+                positionDiv.className = 'container';
+                positionDiv.innerHTML = '<h2>Current Position</h2>';
+                
+                const inputContainer = document.querySelector('.container');
+                inputContainer.parentNode.insertBefore(positionDiv, inputContainer.nextSibling);
+            }
+            
+            positionDiv.innerHTML = '<h2>Current Position</h2>' + positionHtml;
+        }
+
+        function getHandDisplay(tiles) {
+            if (!tiles || tiles.length === 0) return "None";
+            return tiles.map(tile => getTileEmoji(tile.type, tile.index, tile.dora)).join(' ');
+        }
+
         async function getRecommendation() {
             try {
                 const aiChoice = await getAIRecommendation();
                 const tileName = getTileName(aiChoice);
+                const tileEmoji = getTileEmoji(aiChoice.type, aiChoice.index, aiChoice.dora);
                 
                 document.getElementById('aiResults').innerHTML = `
                     <h3>AI Recommendation</h3>
-                    <p><strong>Recommended discard:</strong> ${tileName}</p>
-                    <p><strong>Tile index:</strong> ${aiChoice}</p>
+                    <div class="hand-section">
+                        <h4>Recommended discard:</h4>
+                        <div class="tile-display">${tileEmoji} (${tileName})</div>
+                    </div>
                 `;
                 document.getElementById('aiResults').style.display = 'block';
             } catch (error) {
@@ -156,11 +209,19 @@
                 const explanation = generateTeachingExplanation(comparison, 'beginner');
 
                 const qualityClass = 'quality-' + comparison.quality.toLowerCase();
+                const playerEmoji = getTileEmoji(playerChoice.type, playerChoice.index, playerChoice.dora);
+                const aiEmoji = getTileEmoji(aiChoice.type, aiChoice.index, aiChoice.dora);
                 
                 document.getElementById('comparisonResults').innerHTML = `
                     <h3>Move Comparison</h3>
-                    <p><strong>Player choice:</strong> ${getTileName(playerChoice)}</p>
-                    <p><strong>AI choice:</strong> ${getTileName(aiChoice)}</p>
+                    <div class="hand-section">
+                        <h4>Player choice:</h4>
+                        <div class="tile-display">${playerEmoji} (${getTileName(playerChoice)})</div>
+                    </div>
+                    <div class="hand-section">
+                        <h4>AI choice:</h4>
+                        <div class="tile-display">${aiEmoji} (${getTileName(aiChoice)})</div>
+                    </div>
                     <p><strong>Quality:</strong> <span class="${qualityClass}">${comparison.quality}</span></p>
                     <h4>Teaching Explanation:</h4>
                     <p>${explanation}</p>
