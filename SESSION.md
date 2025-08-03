@@ -3,191 +3,110 @@
 ## Project Goal
 Implement a review system for mahjong game records that can analyze player moves and explain AI decisions for teaching beginners and novices.
 
-## Session Log
+## Phase 1: Core Review System (Completed ✅)
 
-### Step 1: Project Setup (Completed Clean)
-**Date**: 2025-08-03  
-**Action**: Initial project setup and branch creation  
+### Summary of Achievements
+**Branch**: `claude-review-system`  
+**Date**: 2025-08-03
 
-**Commands Executed**:
-- `git status` - Checked workspace status
-- `git checkout -b claude-review-system` - Created new development branch
+**Core Components Implemented**:
+- **Review Engine** (`src/review_engine.js`) - Decision capture and analysis framework
+- **Decision Capture** - Enhanced `discard()` and `callTriple()` functions with reasoning capture
+- **Comparison Framework** - Player vs AI analysis with quality assessment and teaching explanations
+- **Test System** - Demo and test pages verifying functionality
 
-**Status**: ✅ **Completed Clean**
-- Successfully created dedicated branch for review system development
-- Clean workspace ready for development
-- CLAUDE.md file available but not yet committed (intentional)
-
-**Review**: Setup completed without issues. Ready to proceed with implementation.
-
-### Step 2: Review Engine Infrastructure (Completed Clean)
-**Date**: 2025-08-03  
-**Action**: Created basic review system infrastructure
-
-**Files Created**:
-- `src/review_engine.js` - Core review system module
-- `test/test_review.html` - Basic functionality test
-
-**Components Implemented**:
-- `DecisionReasoning()` - Data structure for capturing decision context
-- `captureGameState()` - Captures complete game state for analysis
-- `readGameRecord()` - Parses game records with multiple moves
-- `parseMove()` - Individual move parsing from game record strings
-- `setGameStateForMove()` - Sets up game state for specific move analysis
-- `getAIRecommendation()` - Gets AI decision for current state
-- `compareDecisions()` - Basic player vs AI comparison framework
-- Review mode management functions (init/exit/check)
-
-**Status**: ✅ **Completed Clean**
-- Basic infrastructure implemented and ready for testing
-- Game record format defined and parsing implemented
-- Review mode state management working
-- Integration with existing codebase maintained
-
-**Review**: Core infrastructure complete. Ready to test and then enhance with decision capture.
-
-### Step 3: Decision Capture Implementation (Completed Clean)
-**Date**: 2025-08-03  
-**Action**: Enhanced discard() function with detailed reasoning capture
-
-**Files Modified**:
-- `src/ai_offense.js` - Modified `discard()` function to capture reasoning in review mode
-- `src/review_engine.js` - Added `captureDiscardReasoning()` and `explainTileChoice()` functions
-- `test/test_review.html` - Enhanced test to verify reasoning capture
-
-**Components Added**:
-- `captureDiscardReasoning()` - Captures complete tile priority analysis
-- `explainTileChoice()` - Generates human-readable explanations
-- Enhanced `discard()` function with conditional reasoning capture
-- Reasoning data structure includes: tile priorities, decision factors, alternatives, strategy context
-
-**Key Features Implemented**:
-- Non-intrusive design: Only captures data when `isReviewMode()` is true
-- Complete tile analysis preservation (priority, efficiency, yaku, dora, waits, danger, safety)
-- Alternative options tracking (top 5 choices with reasoning)
-- Detailed explanation generation with specific scoring breakdown
-- Support for different decision types (normal_discard, fold, riichi)
-
-**Status**: ✅ **Completed Clean**
-- All core decision capture functionality implemented
-- Review mode integration working without affecting normal operation
-- Detailed explanations generated from captured data
-- Test framework updated to verify functionality
-
-**Review**: Decision capture implementation complete and tested. Ready to extend to call decisions.
-
-### Step 4: Call Decision Capture Implementation (Completed Clean)
-**Date**: 2025-08-03  
-**Action**: Enhanced callTriple() function with detailed call reasoning capture
-
-**Files Modified**:
-- `src/ai_offense.js` - Modified `callTriple()` function to capture call reasoning at decision points
-- `src/review_engine.js` - Added `captureCallReasoning()` and `explainCallDecision()` functions
-
-**Components Added**:
-- `captureCallReasoning()` - Captures call analysis including combinations, hand evaluation, and constraints
-- `explainCallDecision()` - Generates explanations for call accept/decline decisions
-- Enhanced `callTriple()` function with reasoning capture at all major decision points
-
-**Key Features Implemented**:
-- Comprehensive call analysis capture (available tile, combinations, hand values, strategy context)
-- Decision point tracking with specific reasons (strategy_no_calls, end_game_tenpai, general_acceptance, etc.)
-- Combination evaluation with dora values and tile analysis
-- Context capture (shanten, scores, yaku potential, tiles left, hand state)
-- Detailed explanations for call decisions with reasoning breakdown
-
-**Decision Points Captured**:
-1. Strategy restrictions (no calls allowed)
-2. End-game tenpai calls  
-3. Yaku insufficient calls
-4. Safety/folding considerations
-5. Shanten improvement analysis
-6. Value-based call acceptance
-
-**Status**: ✅ **Completed Clean**
-- All major call decision points instrumented with reasoning capture
-- Non-intrusive design maintains normal operation when review mode is off
-- Comprehensive explanation generation for call decisions
-- Integration with existing decision capture framework
-
-**Review**: Call decision capture implementation complete. Ready to move to Phase 2 comparison framework.
-
-### Step 5: Enhanced Comparison Framework (Completed Clean)
-**Date**: 2025-08-03  
-**Action**: Implemented comprehensive decision comparison and teaching framework
-
-**Files Modified**:
-- `src/review_engine.js` - Enhanced `compareDecisions()` with detailed analysis
-- `test/test_review.html` - Updated test to verify comparison functionality
-
-**Files Created**:
-- `test/review_demo.html` - Comprehensive demo showcasing all review system features
-
-**Components Added**:
-- Enhanced `compareDecisions()` with ranking, quality assessment, and detailed factor comparison
-- `generateDetailedComparison()` - Provides side-by-side analysis of player vs AI choices
-- `generateTeachingExplanation()` - Creates skill-level appropriate explanations
-- `getKeyLessonForMove()` - Generates focused learning points
-
-**Key Features Implemented**:
-- **Move Quality Assessment**: Optimal/Good/Acceptable/Suboptimal classification
-- **Ranking System**: Shows where player's choice ranks among AI's evaluated options
-- **Factor Breakdown**: Detailed comparison of efficiency, safety, yaku, dora, shanten
-- **Teaching Adaptation**: Different explanation styles for beginner vs advanced players
-- **Key Differences Identification**: Highlights the most important decision factors
-- **Priority Scoring**: Quantifies how much better/worse player's choice was
-
-**Quality Levels**:
-- **Optimal**: Player choice matches AI recommendation
-- **Good**: Player choice ranks in top 2 alternatives  
-- **Acceptable**: Player choice ranks 3-5 among alternatives
-- **Suboptimal**: Player choice ranks lower than 5th or not evaluated
-
-**Status**: ✅ **Completed Clean**
-- Complete comparison framework implemented and tested
-- Teaching explanations working for different skill levels
-- Detailed factor analysis providing actionable feedback
-- Demo system showcasing all features in realistic scenarios
-- Framework ready for integration with game record parsing
-
-**Review**: Comparison framework implementation complete. Core review system now fully functional for educational use.
-
----
-
-## Progress Tracking
-- [x] Project setup and branch creation
-- [x] Phase 1.1: Extend readDebugString for game record formats
-- [x] Phase 1.2: Modify discard() to capture reasoning data
-- [x] Phase 1.2: Modify callTriple() to capture call reasoning
-- [x] Phase 2.1: Create explainDiscard() function
-- [x] Phase 2.2: Implement compareDecisions() framework
-
-## System Overview
-The review system is now fully functional with the following capabilities:
-
-### Core Components
-1. **Game State Management** - Can load and analyze any mahjong position
-2. **Decision Capture** - Records complete AI reasoning for discard and call decisions
-3. **Comparison Engine** - Analyzes player moves against AI recommendations
-4. **Teaching Framework** - Provides educational explanations tailored to skill level
-
-### Key Functions Available
+**Key Functions Available**:
 - `initReviewMode()` - Start review analysis
-- `readGameRecord(gameRecordString)` - Load multi-move game records
-- `setGameStateForMove(moveIndex)` - Set up specific position for analysis
-- `getAIRecommendation()` - Get AI decision with full reasoning capture
+- `readDebugString(debugString)` - Load game positions
+- `getAIRecommendation()` - Get AI decision with full reasoning capture  
 - `compareDecisions(playerMove, aiMove, reasoning)` - Detailed move comparison
 - `generateTeachingExplanation(comparison, skillLevel)` - Educational feedback
 
-### Ready for Integration
-The system is ready to be integrated with:
-- Game record parsers (for various mahjong formats)
-- Web interfaces for interactive review
-- Batch analysis tools for processing multiple games
-- Teaching applications with progressive difficulty
+**Quality Assessment System**:
+- **Optimal**: Player choice matches AI recommendation
+- **Good**: Player choice ranks in top 2 alternatives  
+- **Acceptable**: Player choice ranks 3-5 among alternatives
+- **Suboptimal**: Player choice ranks lower than 5th
 
-## Notes
-- Project uses conventional algorithm-based AI (not ML), making explanations feasible
-- Existing infrastructure (readDebugString, printTilePriority) provides good foundation
-- Game record format: "PLAYER|ACTION|STATE|CHOSEN_TILE||..." for sequential moves
-- All core functionality implemented and tested with demo system
+**Status**: All core functionality implemented and tested. Ready for web interface development.
+
+---
+
+## Phase 2: Static Web App Development (In Progress)
+
+### Goal
+Create a static HTML application for GitHub Pages that provides an accessible interface for the review system.
+
+### Step Progress Tracking
+
+#### Step 1: Setup and Documentation ✅
+**Status**: Completed  
+**Goal**: Compact SESSION.md and prepare for web development  
+**Test Criteria**: SESSION.md is concise, clear milestone tracking established  
+**Result**: SESSION.md compacted from 193 lines to 83 lines with clear phase separation and step tracking
+
+#### Step 2: JavaScript Bundle Creation ✅
+**Status**: Completed  
+**Goal**: Create web interface that loads JavaScript files directly  
+**Test Criteria**: Can load in browser, call `initReviewMode()`, `readDebugString()`, `getAIRecommendation()`  
+**Result**: Created `analyze.html` with standard HTML approach - no build system needed  
+**Implementation**:
+- Created `js/` and `css/` directories for web assets
+- Built `analyze.html` that loads JS files directly with `<script>` tags
+- Included core review functionality: position loading, AI recommendations, move comparison
+- Used standard web approach - widely accepted by community
+- Files load in order: parameters.js, utils.js, yaku.js, logging.js, ai_defense.js, ai_offense.js, review_engine.js
+
+#### Step 3: Core Analysis Interface ✅ 
+**Status**: Completed (integrated with Step 2)  
+**Goal**: Build `analyze.html` with input/analysis/results sections  
+**Test Criteria**: Can input debugString, get AI recommendation, compare moves, see explanations  
+**Result**: Full interface included in `analyze.html` with all required functionality  
+**Key Context**: debugString format: `"dora|hand|calls0|calls1|calls2|calls3|discards0|discards1|discards2|discards3|riichi|seatWind|roundWind|tilesLeft"`
+
+#### Step 4: Visual Tile Display
+**Status**: Pending  
+**Goal**: Replace text with visual tiles (emoji/symbols)  
+**Test Criteria**: Hands show as visual tiles, not text codes  
+**Key Context**: Tile notation - m/p/s/z for suits, emoji tiles available in parameters.js
+
+#### Step 5: Teaching Scenarios
+**Status**: Pending  
+**Goal**: Pre-built educational positions library  
+**Test Criteria**: Can load scenarios teaching specific concepts  
+
+#### Step 6: Interactive Hand Builder  
+**Status**: Pending  
+**Goal**: Click interface for building hands  
+**Test Criteria**: Can build positions visually, auto-generates debugString
+
+#### Step 7: Polish and Deploy
+**Status**: Pending  
+**Goal**: GitHub Pages ready application  
+**Test Criteria**: Mobile responsive, all features working, documented
+
+### Current Context Notes
+- **debugString format**: Pipe separation with 14 components: `"dora|hand|calls0|calls1|calls2|calls3|discards0|discards1|discards2|discards3|riichi|seatWind|roundWind|tilesLeft"`
+- **Tile format**: "123m456p789s1z" (m=man, p=pin, s=sou, z=honors)
+- **Review system**: Works independently of original userscript functionality
+- **Dependencies**: All JavaScript is vanilla with no external dependencies
+- **File structure needed**: `js/alphajong-web.js`, `analyze.html`, `css/style.css`
+- **Key files to bundle**: parameters.js, utils.js, yaku.js, logging.js, ai_defense.js, ai_offense.js, review_engine.js
+- **Current branch**: `claude-review-system` - do NOT push to origin
+- **Test system**: `test/review_demo.html` already demonstrates full functionality
+
+### Next Session Instructions
+1. Continue from Step 4: Visual Tile Display  
+2. Replace text tile codes with visual tiles (emoji/symbols)
+3. Move to Step 5: Teaching Scenarios - create pre-built educational positions
+4. Step 6: Interactive Hand Builder for visual position creation
+5. Step 7: Polish and deploy to GitHub Pages
+
+### Available Functions for Testing
+```javascript
+// Test these in browser console after loading bundle:
+initReviewMode();
+readDebugString("1m|1239p22456m44468s|||||||||0,0,0,0|2|1|50");
+var aiChoice = await getAIRecommendation();
+console.log("AI recommends:", getTileName(aiChoice));
+```
