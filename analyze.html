@@ -12,6 +12,41 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            .tile-display {
+                font-size: 1.2em;
+                line-height: 1.4;
+            }
+            .tile-button {
+                font-size: 1.5em;
+                margin: 1px;
+                padding: 2px 4px;
+            }
+            textarea {
+                height: 80px;
+                font-size: 14px;
+            }
+            button {
+                padding: 8px 16px;
+                margin: 3px;
+                font-size: 14px;
+            }
+            h1 {
+                font-size: 1.5em;
+                text-align: center;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+        }
         .container {
             background: white;
             padding: 20px;
@@ -65,6 +100,22 @@
             margin: 0 0 8px 0;
             color: #555;
         }
+        .tile-button {
+            font-size: 2em;
+            margin: 2px;
+            padding: 4px 8px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .tile-button:hover {
+            background: #f0f0f0;
+            border-color: #007bff;
+        }
+        .tile-selector-section {
+            margin: 10px 0;
+        }
         .quality-optimal { color: #28a745; }
         .quality-good { color: #17a2b8; }
         .quality-acceptable { color: #ffc107; }
@@ -80,6 +131,14 @@
         <textarea id="debugInput" placeholder="Example: 1m|1239p22456m44468s|||||||||0,0,0,0|2|1|50"></textarea>
         <button onclick="loadPosition()">Load Position</button>
         <button onclick="loadExample()">Load Example</button>
+        <button onclick="showScenarios()">Teaching Scenarios</button>
+    </div>
+
+    <div id="scenariosPanel" class="container" style="display: none;">
+        <h2>Teaching Scenarios</h2>
+        <p>Select a pre-built educational position to learn specific concepts:</p>
+        <div id="scenarioButtons"></div>
+        <button onclick="hideScenarios()">Hide Scenarios</button>
     </div>
 
     <div class="container">
@@ -96,6 +155,49 @@
         <div id="comparisonResults" class="results" style="display: none;"></div>
     </div>
 
+    <div id="handBuilderPanel" class="container" style="display: none;">
+        <h2>Interactive Hand Builder</h2>
+        <p>Click tiles to build a mahjong hand visually:</p>
+        
+        <div class="hand-section">
+            <h4>Your Hand</h4>
+            <div id="builtHand" class="tile-display">Click tiles below to add to hand</div>
+            <button onclick="clearHand()">Clear Hand</button>
+            <button onclick="generateDebugString()">Generate Position</button>
+        </div>
+
+        <div class="hand-section">
+            <h4>Available Tiles</h4>
+            <div id="tileSelector"></div>
+        </div>
+        
+        <button onclick="hideHandBuilder()">Hide Hand Builder</button>
+    </div>
+
+    <div class="container">
+        <button onclick="showHandBuilder()">Interactive Hand Builder</button>
+    </div>
+
+    <div class="container">
+        <h2>About AlphaJong Review System</h2>
+        <p>This review system analyzes mahjong positions and provides educational feedback to help players learn optimal strategies. It uses the same AI engine as the AlphaJong userscript bot.</p>
+        
+        <h3>How to Use:</h3>
+        <ol>
+            <li><strong>Load a Position:</strong> Enter a debug string, use an example, or try a teaching scenario</li>
+            <li><strong>Get AI Analysis:</strong> Click "Get AI Recommendation" to see what the AI would discard</li>
+            <li><strong>Compare Moves:</strong> Enter your choice to compare with the AI and get feedback</li>
+            <li><strong>Learn Concepts:</strong> Use teaching scenarios to practice specific mahjong concepts</li>
+            <li><strong>Build Custom Hands:</strong> Use the hand builder to create your own positions</li>
+        </ol>
+
+        <h3>Debug String Format:</h3>
+        <p><code>dora|hand|calls0|calls1|calls2|calls3|discards0|discards1|discards2|discards3|riichi|seatWind|roundWind|tilesLeft</code></p>
+        <p>Tiles are in format: 123m456p789s1z (m=man, p=pin, s=sou, z=honors)</p>
+        
+        <p><small>Part of the AlphaJong project - Advanced Mahjong AI for learning and analysis.</small></p>
+    </div>
+
     <!-- Load JavaScript files -->
     <script src="src/parameters.js"></script>
     <script src="src/utils.js"></script>
@@ -106,6 +208,58 @@
     <script src="src/review_engine.js"></script>
 
     <script>
+        // Teaching scenarios database
+        const teachingScenarios = {
+            "basic_efficiency": {
+                name: "Basic Efficiency",
+                description: "Learn when to prioritize tile efficiency over other factors",
+                debugString: "1m|1239p22456m44468s|||||||||0,0,0,0|2|1|50",
+                concept: "Always aim to improve your hand's efficiency first"
+            },
+            "safety_vs_speed": {
+                name: "Safety vs Speed", 
+                description: "Balance between advancing your hand and staying safe",
+                debugString: "6z|23467m345p67899s|||||23467m||||0,0,0,0|2|1|30",
+                concept: "Sometimes safety is more important than hand advancement"
+            },
+            "dora_value": {
+                name: "Dora Value Assessment",
+                description: "Learn how to properly value dora tiles in your decisions",
+                debugString: "5p|11223m567p11199s|||||||||0,0,0,0|2|1|40",
+                concept: "Dora tiles increase hand value but shouldn't override fundamental strategy"
+            },
+            "riichi_timing": {
+                name: "Riichi Timing",
+                description: "Understand when to declare riichi vs staying dama",
+                debugString: "7z|1234567m22p789s|||||||||0,0,0,0|2|1|25",
+                concept: "Riichi timing depends on hand value, safety, and game situation"
+            },
+            "defensive_play": {
+                name: "Defensive Play",
+                description: "Learn defensive discard principles when opponents threaten",
+                debugString: "1z|3456789m23p567s|||||1238m|7m9m|||1,0,0,0|2|1|15",
+                concept: "Safe tiles are more valuable than hand advancement when under pressure"
+            },
+            "thirteen_orphans": {
+                name: "Thirteen Orphans",
+                description: "Recognize when to go for thirteen orphans yakuman",
+                debugString: "1m|119m19p19s1234567z|||||||||0,0,0,0|2|1|60",
+                concept: "13 orphans requires collecting all terminals and honors"
+            },
+            "seven_pairs": {
+                name: "Seven Pairs (Chiitoitsu)",
+                description: "Learn when seven pairs strategy is optimal",
+                debugString: "2m|1133p445566m77s|||||||||0,0,0,0|2|1|50",
+                concept: "Chiitoitsu works best with many early pairs and no good sequences"
+            },
+            "end_game": {
+                name: "End Game Strategy",
+                description: "Adjust strategy when few tiles remain",
+                debugString: "4z|23456m11234p89s|||||||||0,0,0,0|2|1|5",
+                concept: "With few tiles left, prioritize definite wins over potential improvements"
+            }
+        };
+
         // Initialize review mode on page load
         window.onload = function() {
             initReviewMode();
@@ -114,6 +268,132 @@
 
         function loadExample() {
             document.getElementById('debugInput').value = "1m|1239p22456m44468s|||||||||0,0,0,0|2|1|50";
+        }
+
+        function showScenarios() {
+            const panel = document.getElementById('scenariosPanel');
+            const buttonsDiv = document.getElementById('scenarioButtons');
+            
+            // Generate scenario buttons
+            buttonsDiv.innerHTML = '';
+            for (const [key, scenario] of Object.entries(teachingScenarios)) {
+                const scenarioDiv = document.createElement('div');
+                scenarioDiv.className = 'hand-section';
+                scenarioDiv.innerHTML = `
+                    <h4>${scenario.name}</h4>
+                    <p>${scenario.description}</p>
+                    <p><em>Key concept: ${scenario.concept}</em></p>
+                    <button onclick="loadScenario('${key}')">Load This Scenario</button>
+                `;
+                buttonsDiv.appendChild(scenarioDiv);
+            }
+            
+            panel.style.display = 'block';
+        }
+
+        function hideScenarios() {
+            document.getElementById('scenariosPanel').style.display = 'none';
+        }
+
+        function loadScenario(scenarioKey) {
+            const scenario = teachingScenarios[scenarioKey];
+            if (scenario) {
+                document.getElementById('debugInput').value = scenario.debugString;
+                loadPosition();
+                hideScenarios();
+                
+                // Show the concept for this scenario
+                setTimeout(() => {
+                    alert(`Teaching Concept: ${scenario.concept}\n\nNow get the AI recommendation to see why this position teaches "${scenario.name}"`);
+                }, 500);
+            }
+        }
+
+        // Hand builder functionality
+        let builtHandTiles = [];
+
+        function showHandBuilder() {
+            const panel = document.getElementById('handBuilderPanel');
+            generateTileSelector();
+            panel.style.display = 'block';
+        }
+
+        function hideHandBuilder() {
+            document.getElementById('handBuilderPanel').style.display = 'none';
+        }
+
+        function generateTileSelector() {
+            const selector = document.getElementById('tileSelector');
+            selector.innerHTML = '';
+
+            // Create tile buttons for each suit and honors
+            const suits = [
+                { name: 'Characters (Man)', type: 1, tiles: [1,2,3,4,5,6,7,8,9] },
+                { name: 'Dots (Pin)', type: 0, tiles: [1,2,3,4,5,6,7,8,9] },
+                { name: 'Bamboo (Sou)', type: 2, tiles: [1,2,3,4,5,6,7,8,9] },
+                { name: 'Honors', type: 3, tiles: [1,2,3,4,5,6,7] }
+            ];
+
+            suits.forEach(suit => {
+                const suitDiv = document.createElement('div');
+                suitDiv.className = 'tile-selector-section';
+                suitDiv.innerHTML = `<h4>${suit.name}</h4>`;
+                
+                const tilesDiv = document.createElement('div');
+                suit.tiles.forEach(tileIndex => {
+                    const button = document.createElement('button');
+                    button.className = 'tile-button';
+                    button.innerHTML = getTileEmoji(suit.type, tileIndex, false);
+                    button.title = `${tileIndex}${getNameForType(suit.type)}`;
+                    button.onclick = () => addTileToHand(suit.type, tileIndex);
+                    tilesDiv.appendChild(button);
+                });
+                
+                suitDiv.appendChild(tilesDiv);
+                selector.appendChild(suitDiv);
+            });
+        }
+
+        function addTileToHand(type, index) {
+            if (builtHandTiles.length >= 14) {
+                alert("Hand is full (14 tiles maximum)");
+                return;
+            }
+            
+            builtHandTiles.push({type: type, index: index, dora: false});
+            updateHandDisplay();
+        }
+
+        function clearHand() {
+            builtHandTiles = [];
+            updateHandDisplay();
+        }
+
+        function updateHandDisplay() {
+            const handDiv = document.getElementById('builtHand');
+            if (builtHandTiles.length === 0) {
+                handDiv.innerHTML = 'Click tiles below to add to hand';
+            } else {
+                handDiv.innerHTML = builtHandTiles.map(tile => getTileEmoji(tile.type, tile.index, tile.dora)).join(' ');
+            }
+        }
+
+        function generateDebugString() {
+            if (builtHandTiles.length === 0) {
+                alert("Please add tiles to your hand first");
+                return;
+            }
+
+            // Convert built hand to tile string format
+            const handString = getStringForTiles(builtHandTiles);
+            
+            // Create a simple debug string with default values
+            const debugString = `1m|${handString}|||||||||0,0,0,0|2|1|50`;
+            
+            document.getElementById('debugInput').value = debugString;
+            hideHandBuilder();
+            loadPosition();
+            alert("Position generated! You can now analyze your custom hand.");
         }
 
         function loadPosition() {
