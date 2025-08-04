@@ -376,3 +376,25 @@ function getChinitsu(hand) {
 	}
 	return { open: 0, closed: 0 };
 }
+
+// ES Module exports for testing
+if (typeof module !== 'undefined' && module.exports) {
+	module.exports = {
+		getYaku,
+		getYakuhai,
+		getTanyao,
+		getIipeikou,
+		getSanankou,
+		getToitoi,
+		getSanshokuDouko,
+		getSanshokuDoujun,
+		getShousangen,
+		getDaisangen,
+		getChanta,
+		getHonrou,
+		getJunchan,
+		getIttsuu,
+		getHonitsu,
+		getChinitsu
+	};
+}

@@ -13,9 +13,12 @@ AlphaJong is a Mahjong AI for Mahjong Soul that runs as a userscript in web brow
 - Output: `build/AlphaJong_<VERSION>.user.js`
 
 ### Testing
-- Open `test/run_tests.html` in a browser to run the test suite
+- **Browser Tests**: Open `test/run_tests.html` in a browser to run the test suite
 - Open `test/run_benchmark.html` for performance benchmarking
 - Tests use a custom framework with "Nani Kiru?" (what to discard) test cases
+- **Unit Tests**: `bun test` - Run unit tests for pure functions (uses Bun test runner)
+  - `bun test test/simple.test.js` - Run core utility function tests only
+  - Tests cover tile operations, hand analysis, scoring, and yaku detection
 
 ### No Linting/Type Checking
 This project does not use any linting tools, type checkers, or package managers. All development is done with vanilla JavaScript.

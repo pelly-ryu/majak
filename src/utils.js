@@ -919,3 +919,43 @@ function getTileEmojiByName(name) {
 	let tile = getTileFromString(name);
 	return getTileEmoji(tile.type, tile.index, tile.dora);
 }
+
+// ES Module exports for testing
+if (typeof module !== 'undefined' && module.exports) {
+	module.exports = {
+		isSameTile,
+		getNumberOfDoras,
+		getPairs,
+		getPairsAsArray,
+		getDoubles,
+		getTriplesAndPairs,
+		getTriples,
+		getTriplets,
+		getTripletsAsArray,
+		getBestSequenceCombination,
+		getBestCombinationOfTiles,
+		getSequences,
+		removeTilesFromTileArray,
+		sortTiles,
+		getNumberOfTilesInTileArray,
+		getTilesInTileArray,
+		getTileDoraValue,
+		getHigherTileIndex,
+		getHandWithCalls,
+		pushTileIfNotExists,
+		getUsefulTilesForTriple,
+		getUsefulTilesForDouble,
+		getAllTerminalHonorFromHand,
+		isTerminalOrHonor,
+		getWaitQuality,
+		calculateShanten,
+		calculateScore,
+		calculateFu,
+		isValueTile,
+		isWinningHand,
+		getWallSize,
+		getCallNameByType,
+		getTileEmoji,
+		getTileEmojiByName
+	};
+}
