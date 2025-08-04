@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Review System Test</title>
+<script>
+var DEBUG = true;
+</script>
+<script src="../src/parameters.js"></script> 
+<script src="../test/test_api.js"></script> 
+<script src="../src/ai_offense.js"></script> 
+<script src="../src/ai_defense.js"></script> 
+<script src="../src/utils.js"></script> 
+<script src="../src/yaku.js"></script> 
+<script src="../src/logging.js"></script> 
+<script src="../test/test_utils.js"></script>
+<script src="../src/review_engine.js"></script>
+<script src="../src/main.js"></script> 
+
+<script>
+// Test the review system basic functionality
+async function testReviewSystem() {
+    log("=== Testing Review System ===");
+    
+    // Test 1: Initialize review mode
+    initReviewMode();
+    log("Review mode active: " + isReviewMode());
+    
+    // Test 2: Set up a simple game state
+    resetGlobals();
+    readDebugString("1m|1239p22456m44468s|||||||||0,0,0,0|2|1|50");
+    
+    // Test 3: Capture game state
+    var state = captureGameState();
+    log("Captured game state with hand: " + state.ownHand.length + " tiles");
+    
+    // Test 4: Get AI recommendation with reasoning capture
+    var aiChoice = await getAIRecommendation();
+    log("AI recommends discarding: " + getTileName(aiChoice));
+    
+    // Test 4.5: Check if reasoning was captured
+    if (capturedDecisions.length > 0) {
+        var reasoning = capturedDecisions[capturedDecisions.length - 1];
+        log("Captured reasoning for " + reasoning.tilePriorities.length + " tile choices");
+        log("Top choice priority: " + reasoning.tilePriorities[0].priority.toFixed(3));
+        
+        // Test explanation generation
+        var explanation = explainTileChoice(reasoning);
+        log("=== AI Decision Explanation ===");
+        log(explanation);
+        log("=== End Explanation ===");
+    } else {
+        log("Warning: No reasoning data captured");
+    }
+    
+    // Test 5: Test game record parsing
+    var testRecord = "0|discard|1m|1239p22456m44468s|||||||||0,0,0,0|2|1|50|9p||1|discard|1m|123p22456m44468s|||||||||0,0,0,0|2|1|49|9s";
+    var parsed = readGameRecord(testRecord);
+    log("Parsed game record with " + parsed.length + " moves");
+    
+    if (parsed.length > 0) {
+        log("First move: Player " + parsed[0].player + " " + parsed[0].action + " " + parsed[0].chosenTile);
+    }
+    
+    // Test 6: Enhanced decision comparison
+    var playerChoice = getTileFromString("9p");
+    var lastReasoning = capturedDecisions.length > 0 ? capturedDecisions[capturedDecisions.length - 1] : null;
+    var comparison = compareDecisions(playerChoice, aiChoice, lastReasoning);
+    
+    log("=== Decision Comparison Results ===");
+    log("Same choice: " + comparison.isSame);
+    log("Quality assessment: " + comparison.qualityAssessment);
+    log("Player tile rank: " + comparison.playerTileRank);
+    log("Priority difference: " + comparison.priorityDifference.toFixed(3));
+    log("Explanation: " + comparison.explanation);
+    
+    // Test detailed analysis
+    if (comparison.detailedAnalysis && comparison.detailedAnalysis.length > 0) {
+        log("=== Detailed Analysis ===");
+        for (var i = 0; i < comparison.detailedAnalysis.length; i++) {
+            log(comparison.detailedAnalysis[i]);
+        }
+    }
+    
+    // Test teaching explanation
+    var teachingExpl = generateTeachingExplanation(comparison, "beginner");
+    log("=== Teaching Explanation ===");
+    log(teachingExpl);
+    
+    exitReviewMode();
+    log("=== Review System Test Complete ===");
+}
+
+// Run test when page loads
+if (isDebug()) {
+    setTimeout(testReviewSystem, 1000);
+}
+</script>
+</head>
+<body>
+<h1>Review System Test</h1>
+<p>Check browser console (F12) for test results.</p>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Mahjong Review System Demo</title>
+<style>
+    body { font-family: monospace; margin: 20px; }
+    .section { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+    .good { color: green; }
+    .warning { color: orange; }
+    .error { color: red; }
+    .info { color: blue; }
+</style>
+<script>
+var DEBUG = true;
+</script>
+<script src="../src/parameters.js"></script> 
+<script src="../test/test_api.js"></script> 
+<script src="../src/ai_offense.js"></script> 
+<script src="../src/ai_defense.js"></script> 
+<script src="../src/utils.js"></script> 
+<script src="../src/yaku.js"></script> 
+<script src="../src/logging.js"></script> 
+<script src="../test/test_utils.js"></script>
+<script src="../src/review_engine.js"></script>
+<script src="../src/main.js"></script> 
+
+<script>
+// Enhanced logging with styling
+function styledLog(message, className = "") {
+    console.log(message);
+    var output = document.getElementById("output");
+    if (output) {
+        var div = document.createElement("div");
+        div.innerHTML = message.replace(/\n/g, "<br>");
+        if (className) div.className = className;
+        output.appendChild(div);
+    }
+}
+
+// Demo scenarios for different types of decisions
+async function runReviewDemo() {
+    styledLog("=== MAHJONG REVIEW SYSTEM DEMO ===", "info");
+    
+    // Initialize review mode
+    initReviewMode();
+    styledLog("✓ Review mode initialized", "good");
+    
+    // Demo 1: Good Player Decision
+    await demoScenario1();
+    
+    // Demo 2: Suboptimal Player Decision  
+    await demoScenario2();
+    
+    // Demo 3: Call Decision Analysis
+    await demoScenario3();
+    
+    exitReviewMode();
+    styledLog("=== DEMO COMPLETE ===", "info");
+}
+
+// Scenario 1: Player makes optimal choice
+async function demoScenario1() {
+    styledLog("\n🟢 SCENARIO 1: Optimal Player Decision", "good");
+    
+    resetGlobals();
+    readDebugString("1m|1239p22456m44468s|||||||||0,0,0,0|2|1|50");
+    
+    styledLog("Hand: 1239p 22456m 44468s", "info");
+    styledLog("Dora: 1m", "info");
+    
+    var aiChoice = await getAIRecommendation();
+    var playerChoice = aiChoice; // Player chooses optimally
+    
+    if (capturedDecisions.length > 0) {
+        var reasoning = capturedDecisions[capturedDecisions.length - 1];
+        var comparison = compareDecisions(playerChoice, aiChoice, reasoning);
+        
+        styledLog("Player discarded: " + getTileName(playerChoice), "info");
+        styledLog("AI recommendation: " + getTileName(aiChoice), "info");
+        styledLog("Result: " + comparison.qualityAssessment.toUpperCase(), "good");
+        
+        var teaching = generateTeachingExplanation(comparison, "beginner");
+        styledLog(teaching, "good");
+    }
+}
+
+// Scenario 2: Player makes suboptimal choice
+async function demoScenario2() {
+    styledLog("\n🟡 SCENARIO 2: Suboptimal Player Decision", "warning");
+    
+    resetGlobals();
+    readDebugString("7z|1239p22456m44468s|||||||||0,0,0,0|2|1|50");
+    
+    styledLog("Hand: 1239p 22456m 44468s", "info");
+    styledLog("Dora: 7z", "info");
+    
+    var aiChoice = await getAIRecommendation();
+    var playerChoice = getTileFromString("2m"); // Player chooses poorly
+    
+    if (capturedDecisions.length > 0) {
+        var reasoning = capturedDecisions[capturedDecisions.length - 1];
+        var comparison = compareDecisions(playerChoice, aiChoice, reasoning);
+        
+        styledLog("Player discarded: " + getTileName(playerChoice), "warning");
+        styledLog("AI recommendation: " + getTileName(aiChoice), "info");
+        styledLog("Result: " + comparison.qualityAssessment.toUpperCase(), "warning");
+        
+        // Show detailed analysis
+        if (comparison.detailedAnalysis) {
+            styledLog("\nDetailed Analysis:", "info");
+            for (var line of comparison.detailedAnalysis) {
+                styledLog(line, "");
+            }
+        }
+        
+        var teaching = generateTeachingExplanation(comparison, "beginner");
+        styledLog("\n" + teaching, "warning");
+    }
+}
+
+// Scenario 3: Call decision analysis (simulated)
+async function demoScenario3() {
+    styledLog("\n🔵 SCENARIO 3: Call Decision Analysis", "info");
+    
+    resetGlobals();
+    readDebugString("1m|234599p22456m468s|||||||||0,0,0,0|2|1|50");
+    
+    styledLog("Hand: 234599p 22456m 468s", "info");
+    styledLog("Available call: 7s (for 6s-8s chi)", "info");
+    
+    // Since we can't easily simulate a real call in this demo,
+    // let's show what call reasoning capture would look like
+    styledLog("Call analysis would capture:", "info");
+    styledLog("- Available tile and combinations", "");
+    styledLog("- Hand value before/after call", "");
+    styledLog("- Strategy constraints", "");
+    styledLog("- Decision reasoning with specific factors", "");
+    styledLog("- Alternative combinations evaluated", "");
+    
+    styledLog("This demonstrates the comprehensive call analysis framework.", "good");
+}
+
+// Override log function to use styled output
+function log(message) {
+    styledLog(message);
+}
+
+// Run demo when page loads
+window.onload = function() {
+    setTimeout(runReviewDemo, 1000);
+};
+</script>
+</head>
+<body>
+<h1>Mahjong Review System Demo</h1>
+<p>This demo shows how the review system analyzes player decisions and provides educational feedback.</p>
+
+<div class="section">
+<h3>Features Demonstrated:</h3>
+<ul>
+<li>✅ AI decision capture with detailed reasoning</li>
+<li>✅ Player vs AI move comparison</li>
+<li>✅ Move quality assessment (optimal/good/acceptable/suboptimal)</li>
+<li>✅ Detailed factor breakdown (efficiency, safety, yaku, dora)</li>
+<li>✅ Teaching explanations tailored to skill level</li>
+<li>✅ Call decision analysis framework</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>Output:</h3>
+<div id="output" style="height: 400px; overflow-y: scroll; background: #f5f5f5; padding: 10px;"></div>
+</div>
+
+<div class="section">
+<h3>Console Output:</h3>
+<p>Check browser console (F12) for additional detailed logs.</p>
+</div>
+</body>
+</html>

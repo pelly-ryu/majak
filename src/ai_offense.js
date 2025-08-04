@@ -36,9 +36,21 @@ async function callTriple(combinations, operation) {
 	log("Consider call on " + getTileName(getTileForCall()));
 
 	var handValue = getHandValues(ownHand);
+	
+	// Capture reasoning data for review mode
+	var callReasoning = null;
+	if (typeof isReviewMode === 'function' && isReviewMode()) {
+		callReasoning = captureCallReasoning(combinations, handValue);
+	}
 
 	if (!strategyAllowsCalls && (tilesLeft > 4 || handValue.shanten > 1)) { //No Calls allowed
 		log("Strategy allows no calls! Declined!");
+		if (callReasoning) {
+			callReasoning.decision = "declined";
+			callReasoning.reason = "strategy_no_calls";
+			callReasoning.explanation = "Strategy does not allow calls (tiles left: " + tilesLeft + ", shanten: " + handValue.shanten + ")";
+			capturedDecisions.push(callReasoning);
+		}
 		declineCall(operation);
 		return false;
 	}
@@ -105,6 +117,12 @@ async function callTriple(combinations, operation) {
 
 	if (tilesLeft <= 4 && handValue.shanten == 1 && newHandValue.shanten == 0) { //Call to get tenpai at end of game
 		log("Accept call to be tenpai at end of game!");
+		if (callReasoning) {
+			callReasoning.decision = "accepted";
+			callReasoning.reason = "end_game_tenpai";
+			callReasoning.explanation = "Accept call to reach tenpai at end of game (tiles left: " + tilesLeft + ")";
+			capturedDecisions.push(callReasoning);
+		}
 		makeCallWithOption(operation, comb);
 		return true;
 	}
@@ -197,6 +215,12 @@ async function callTriple(combinations, operation) {
 		}
 	}
 
+	if (callReasoning) {
+		callReasoning.decision = "accepted";
+		callReasoning.reason = "general_acceptance";
+		callReasoning.explanation = "Call accepted after passing all rejection criteria";
+		capturedDecisions.push(callReasoning);
+	}
 	makeCallWithOption(operation, comb);
 	return true;
 }
@@ -999,8 +1023,20 @@ async function discard() {
 		tiles = keepSafetile(tiles);
 	}
 
+	// Capture reasoning data for review mode
+	var reasoning = null;
+	if (typeof isReviewMode === 'function' && isReviewMode()) {
+		reasoning = captureDiscardReasoning(tiles);
+	}
+
 	if (strategy == STRATEGIES.FOLD || tiles.filter(t => t.safe).length == 0) {
-		return discardFold(tiles);
+		var foldTile = discardFold(tiles);
+		if (reasoning) {
+			reasoning.chosenTile = foldTile;
+			reasoning.decisionType = "fold";
+			capturedDecisions.push(reasoning);
+		}
+		return foldTile;
 	}
 
 	log("Tile Priorities: ");
@@ -1017,6 +1053,15 @@ async function discard() {
 	}
 	if (!riichi) {
 		discardTile(tile);
+	}
+
+	// Complete reasoning capture
+	if (reasoning) {
+		reasoning.chosenTile = tile;
+		reasoning.decisionType = riichi ? "riichi" : "normal_discard";
+		reasoning.riichiConsidered = canRiichi();
+		reasoning.riichiChosen = riichi;
+		capturedDecisions.push(reasoning);
 	}
 
 	return tile;
