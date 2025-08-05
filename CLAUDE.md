@@ -10,7 +10,6 @@ AlphaJong is a Mahjong AI analysis tool for learning strategy and decision-makin
 
 ### Analysis Functions
 - Analysis functions are provided as pure JavaScript modules
-- No build process required - functions can be imported directly
 
 ### Testing
 - **Browser Tests**: Open `test/run_tests.html` in a browser to run the test suite

@@ -1,28 +1,19 @@
-# AlphaJong - Educational Mahjong AI
+# AlphaJong - Mahjong AI
 
-An educational Mahjong AI analysis tool for learning strategy and decision-making. This project provides sophisticated hand analysis, strategic recommendations, and educational explanations to help players improve their Mahjong skills.
-
-## 🎓 Educational Purpose
-
-This is a **learning tool only** - all bot/automation functionality has been removed to ensure it cannot be used for cheating. The focus is on understanding AI decision-making and improving Mahjong strategy through analysis.
+A Mahjong AI analysis tool for learning strategy and decision-making. This project provides sophisticated hand analysis, strategic recommendations, and explanations to help players improve their Mahjong skills.
 
 ## ✨ Features
 
-### Hand Analysis
-- **Tile Efficiency**: Calculates how each tile affects hand development
-- **Shanten Calculation**: Determines how close a hand is to completion
-- **Wait Analysis**: Identifies winning tiles and their quality
-- **Yaku Detection**: Recognizes scoring patterns and opportunities
 
 ### Strategic Analysis
 - **Multiple Strategies**: Analyzes general, chiitoitsu, and thirteen orphans approaches
 - **Safety Assessment**: Evaluates tile danger and defensive options  
 - **Call Evaluation**: Determines when to make melds (chi/pon/kan)
-- **Educational Explanations**: Provides reasoning for all recommendations
+- **Explanations**: Provides reasoning for all recommendations
 
-### Learning Tools
+### Analysis Tools
 - **Interactive Analysis**: Step-through hand evaluation process
-- **Teaching Scenarios**: 8 pre-built educational positions covering key concepts
+- **Scenarios**: 8 pre-built positions covering key concepts
 - **Performance Comparison**: See how decisions affect outcomes
 - **Strategy Guides**: Learn optimal play patterns
 
@@ -32,11 +23,6 @@ This is a **learning tool only** - all bot/automation functionality has been rem
 - Node.js or Bun runtime for testing
 - Web browser for interactive examples
 
-### Installation
-```bash
-git clone https://github.com/user/AlphaJong
-cd AlphaJong
-```
 
 ### Running Tests
 ```bash
@@ -64,7 +50,7 @@ const hand = [
 
 const analysis = await analyzeDiscardRecommendation(hand);
 console.log(analysis.recommendation); // Best tile to discard
-console.log(analysis.analysis);       // Educational explanation
+console.log(analysis.analysis);       // Explanation
 ```
 
 ## Debug String Format
@@ -104,7 +90,7 @@ test/
 - `shouldFold(tilePrio)` - Determine if defensive play is recommended
 - `getSafetyAnalysis(tiles)` - Overall safety assessment
 
-### Educational Tools
+### Analysis Tools
 - `generateTileExplanation()` - Explain why a tile has certain priority
 - `analyzeDiscardRecommendation()` - Complete discard analysis with reasoning
 - `evaluateCall()` - Assess meld opportunities with explanations
@@ -140,11 +126,11 @@ bun test test/simple.test.js # Core functions only
 
 ## 🤝 Contributing
 
-Educational improvements welcome! Focus areas:
-- Enhanced explanations and teaching content
+Improvements welcome! Focus areas:
+- Enhanced explanations and content
 - Additional practice scenarios
 - Improved analysis algorithms
-- Better educational interface
+- Better interface
 
 ## 📄 License
 
@@ -152,7 +138,7 @@ GPL v3 - See LICENSE file for details
 
 ## ⚠️ Disclaimer
 
-This is an educational tool for learning Mahjong strategy. It cannot and should not be used for automated play or cheating. The project has been specifically designed to prevent misuse while maximizing educational value.
+This is a tool for learning Mahjong strategy. It cannot be used for automated play or cheating.
 
 ---
 
