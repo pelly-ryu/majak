@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Context Parser Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .demo-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        button { padding: 10px 15px; margin: 5px; }
+        input[type="text"] { width: 400px; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>AlphaJong Game Context Parser Demo</h1>
+    
+    <div class="demo-section">
+        <h2>URL Parsing Demo</h2>
+        <input type="text" id="urlInput" value="https://mahjongsoul.game.yo-star.com/game?room=4&mode=1" placeholder="Enter Mahjong Soul URL">
+        <button onclick="parseURL()">Parse URL</button>
+        <div id="urlResult" class="result"></div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Room Analysis Demo</h2>
+        <label>Room ID: </label>
+        <input type="number" id="roomInput" value="4" min="1" max="10">
+        <button onclick="analyzeRoom()">Analyze Room</button>
+        <div id="roomResult" class="result"></div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Strategic Adjustments Demo</h2>
+        <label>Room Tier: </label>
+        <input type="number" id="tierInput" value="4" min="1" max="7">
+        <button onclick="getAdjustments()">Get Adjustments</button>
+        <div id="adjustmentsResult" class="result"></div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Game Context Simulation</h2>
+        <button onclick="simulateGameContext()">Simulate Full Game Context</button>
+        <div id="contextResult" class="result"></div>
+    </div>
+
+    <script src="../src/game_context.js"></script>
+    <script>
+        function parseURL() {
+            const url = document.getElementById('urlInput').value;
+            const result = parseGameURL(url);
+            document.getElementById('urlResult').innerHTML = 
+                '<h3>URL Parse Result:</h3><pre>' + JSON.stringify(result, null, 2) + '</pre>';
+        }
+        
+        function analyzeRoom() {
+            const roomId = parseInt(document.getElementById('roomInput').value);
+            const roomInfo = getRoomInfo(roomId);
+            const tier = getRoomTier(roomId);
+            const isRanked = isInRankedRoom(roomId);
+            
+            const result = {
+                roomInfo: roomInfo,
+                tier: tier,
+                isRanked: isRanked
+            };
+            
+            document.getElementById('roomResult').innerHTML = 
+                '<h3>Room Analysis:</h3><pre>' + JSON.stringify(result, null, 2) + '</pre>';
+        }
+        
+        function getAdjustments() {
+            const tier = parseInt(document.getElementById('tierInput').value);
+            const gameContext = { roomTier: tier };
+            const adjustments = getStrategicAdjustments(gameContext);
+            
+            document.getElementById('adjustmentsResult').innerHTML = 
+                '<h3>Strategic Adjustments:</h3><pre>' + JSON.stringify(adjustments, null, 2) + '</pre>';
+        }
+        
+        function simulateGameContext() {
+            // Simulate Mahjong Soul data structure
+            const mjSoulData = {
+                game_config: {
+                    meta: { mode_id: 4 }, // Expert room
+                    mode: { mode: 2 }, // South Round
+                    players: [1, 2, 3, 4]
+                },
+                account_data: { 
+                    level: 1405 // Expert rank, 5 stars
+                }
+            };
+            
+            const context = determineGameContext(mjSoulData);
+            const adjustments = getStrategicAdjustments(context);
+            
+            const result = {
+                gameContext: context,
+                strategicAdjustments: adjustments
+            };
+            
+            document.getElementById('contextResult').innerHTML = 
+                '<h3>Complete Game Context:</h3><pre>' + JSON.stringify(result, null, 2) + '</pre>';
+        }
+        
+        // Auto-run URL parsing demo on load
+        window.onload = function() {
+            parseURL();
+        };
+    </script>
+</body>
+</html>
