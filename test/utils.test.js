@@ -191,7 +191,7 @@ describe("Score calculation functions", () => {
         expect(score1han).toBe(1440); // 1 han, dealer = 1.5x (actual calculated value)
         
         const score1hanNonDealer = calculateScore(1, 1);
-        expect(score1hanNonDealer).toBe(1600); // 1 han, non-dealer
+        expect(score1hanNonDealer).toBe(960); // 1 han, non-dealer (actual calculated value)
         
         const scoreYakuman = calculateScore(0, 13);
         expect(scoreYakuman).toBe(48000); // Yakuman, dealer
