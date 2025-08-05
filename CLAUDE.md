@@ -8,9 +8,9 @@ AlphaJong is a Mahjong AI analysis tool for learning strategy and decision-makin
 
 ## Build and Development Commands
 
-### Educational Analysis
+### Analysis Functions
 - Analysis functions are provided as pure JavaScript modules
-- No build process required - functions can be imported directly for educational use
+- No build process required - functions can be imported directly
 
 ### Testing
 - **Browser Tests**: Open `test/run_tests.html` in a browser to run the test suite
@@ -34,7 +34,7 @@ This project does not use any linting tools, type checkers, or package managers.
    - `src/utils.js` - Tile manipulation, hand analysis, and scoring utilities
    - `src/yaku.js` - Yaku (scoring combinations) detection and evaluation
 3. **Configuration**: `src/parameters.js` - Tunable constants for AI behavior
-4. **Game Review**: `src/review_engine.js` - Game analysis and educational feedback
+4. **Game Review**: `src/review_engine.js` - Game analysis and feedback
 5. **Logging**: `src/logging.js` - Debug output and analysis logging
 
 ### Key Data Structures
@@ -45,13 +45,13 @@ This project does not use any linting tools, type checkers, or package managers.
 
 ### AI Strategy Analysis
 
-The AI analyzes multiple strategies and provides educational feedback:
+The AI analyzes multiple strategies and provides feedback:
 - **GENERAL**: Standard 4-groups-1-pair completion analysis
 - **CHIITOITSU**: Seven pairs strategy evaluation
 - **THIRTEEN_ORPHANS**: 13 terminals and honors assessment
 - **FOLD**: Defensive analysis when opponents pose threats
 
-### Educational Features
+### Features
 
 - **Hand Analysis**: Detailed breakdown of tile efficiency and safety
 - **Strategy Recommendations**: Explains optimal play choices with reasoning
@@ -62,6 +62,6 @@ The AI analyzes multiple strategies and provides educational feedback:
 
 - All tile operations use string notation (e.g., "123m456p789s" for hands)
 - Extensive test coverage with specific "what to discard" scenarios
-- Pure function architecture for educational analysis
-- Educational explanations provided for all AI decisions
+- Pure function architecture for analysis
+- Explanations provided for all AI decisions
 - Functions designed for learning and teaching Mahjong strategy
