@@ -4,9 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AlphaJong is an educational Mahjong AI analysis tool for learning strategy and decision-making. It's a conventional algorithm-based AI (not machine learning) that analyzes hands and provides educational feedback on optimal moves. The codebase is written in vanilla JavaScript without external libraries.
-
-**Note**: This is an educational tool only - all bot/automation functionality has been removed to ensure it cannot be used for cheating.
+AlphaJong is a Mahjong AI analysis tool for learning strategy and decision-making. It's a conventional algorithm-based AI (not machine learning) that analyzes hands and provides feedback on optimal moves. The codebase is written in vanilla JavaScript without external libraries.
 
 ## Build and Development Commands
 
