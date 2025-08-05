@@ -4,6 +4,11 @@ A Mahjong AI analysis tool for learning strategy and decision-making. This proje
 
 ## ✨ Features
 
+### 🔗 Interactive Demos
+- **[Mahjong Analyzer](https://pelly-ryu.github.io/majak/analyze.html)** - Interactive hand analysis and strategy recommendations
+- **[URL Data Extraction](https://pelly-ryu.github.io/majak/test/url_extraction_demo.html)** - Parse Mahjong Soul replay URLs and game context
+- **[Game Context Parser](https://pelly-ryu.github.io/majak/test/game_context_demo.html)** - Room detection and strategic adjustments
+- **[Unit Tests](https://pelly-ryu.github.io/majak/test/run_tests.html)** - Comprehensive test suite with 53+ tests
 
 ### Strategic Analysis
 - **Multiple Strategies**: Analyzes general, chiitoitsu, and thirteen orphans approaches
@@ -16,6 +21,12 @@ A Mahjong AI analysis tool for learning strategy and decision-making. This proje
 - **Scenarios**: 8 pre-built positions covering key concepts
 - **Performance Comparison**: See how decisions affect outcomes
 - **Strategy Guides**: Learn optimal play patterns
+
+### URL & Context Analysis
+- **Replay URL Parsing**: Extract game data from Mahjong Soul paipu URLs
+- **Room Detection**: Identify game rooms and skill levels (Beginner → Celestial)
+- **Strategic Adjustments**: Room-based AI behavior modifications
+- **Game Context**: Comprehensive game state analysis from URLs
 
 ## 🚀 Getting Started
 
