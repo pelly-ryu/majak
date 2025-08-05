@@ -920,6 +920,25 @@ function getTileEmojiByName(name) {
 	return getTileEmoji(tile.type, tile.index, tile.dora);
 }
 
+//Get current room from game context
+function getCurrentRoom() {
+	// Try to get room from game context if available
+	if (typeof getCurrentGameContext === 'function') {
+		const context = getCurrentGameContext();
+		if (context && context.roomId) {
+			return context.roomId;
+		}
+	}
+	
+	// Fallback to stored room preference
+	if (typeof ROOM !== 'undefined' && ROOM !== null) {
+		return parseInt(ROOM);
+	}
+	
+	// Default room for educational analysis
+	return 4; // Expert room as reasonable default
+}
+
 // ES Module exports for testing
 if (typeof module !== 'undefined' && module.exports) {
 	module.exports = {
@@ -956,6 +975,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		getWallSize,
 		getCallNameByType,
 		getTileEmoji,
-		getTileEmojiByName
+		getTileEmojiByName,
+		getCurrentRoom
 	};
 }

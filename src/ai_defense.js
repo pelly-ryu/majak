@@ -317,9 +317,21 @@ function isPlayerTenpai(player) {
 		tenpaiChance *= 1 + (isDoingHonitsu(player, 2) / 1.5);
 	}
 
+	// Apply room-based strategic adjustments
 	var room = getCurrentRoom();
 	if (room < 5 && room > 0) { //Below Throne Room: Less likely to be tenpai
 		tenpaiChance *= 1 - ((5 - room) * 0.1); //10% less likely for every rank lower than throne room to be tenpai
+	}
+	
+	// Enhanced room context adjustments if game context is available
+	if (typeof getStrategicAdjustments === 'function' && typeof determineGameContext === 'function') {
+		try {
+			const gameContext = determineGameContext({ roomId: room });
+			const adjustments = getStrategicAdjustments(gameContext);
+			tenpaiChance *= adjustments.defenseMultiplier;
+		} catch (e) {
+			// Fallback to original logic if context parsing fails
+		}
 	}
 
 	if (tenpaiChance > 1) {
